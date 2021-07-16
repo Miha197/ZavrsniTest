@@ -20,8 +20,6 @@ namespace AutomatedTests
         private string RegisteredUsername = string.Empty;
         private string RegisteredPassword = string.Empty;
 
-       
-
         [SetUp]
         public void SetUp()
         {            
