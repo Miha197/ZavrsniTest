@@ -2,92 +2,90 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using EC = SeleniumExtras.WaitHelpers.ExpectedConditions;
-using Cas27.Lib;
+using TestLogger;
+using System.Linq;
 
-namespace ZavrsniTest
+
+namespace AutomatedTests
 {
     class BaseTest
     {
-        protected IWebDriver driver;
-        protected WebDriverWait wait;
+        protected IWebDriver Driver;
+        protected WebDriverWait Wait;
 
         protected void GoToURL(string url)
         {
-            Logger.log("INFO", $"Opening URL: {url}");
-            this.driver.Navigate().GoToUrl(url);
+            Logger.Info($"Opening URL: {url}");
+            Driver.Navigate().GoToUrl(url);
         }
 
-        protected IWebElement MyFindElement(By Selector)
+        protected IWebElement FindMyElement(By Selector)
         {
-            IWebElement ReturnElement = null;
-            Logger.log("INFO", $"Looking for element: <{Selector}>");
+            IWebElement returnElement = null;
+            Logger.Info($"Looking for element: <{Selector}>");
+
             try
             {
-                ReturnElement = this.driver.FindElement(Selector);
+                returnElement = Driver.FindElement(Selector);
             }
             catch (NoSuchElementException)
             {
-                Logger.log("ERROR", $"Can't find element: <{Selector}>");
+                Logger.Error($"Can't find element: <{Selector}>");
             }
 
-            if (ReturnElement != null)
+            if (returnElement != null)
             {
-                Logger.log("INFO", $"Element: <{Selector}> found.");
+                Logger.Info($"Element: <{Selector}> found.");
             }
-
-            return ReturnElement;
+            return returnElement;
         }
 
         protected IWebElement WaitForElement(Func<IWebDriver, IWebElement> ExpectedConditions)
         {
-            IWebElement ReturnElement = null;
-            Logger.log("INFO", $"Waiting for element.");
+            IWebElement returnElement = null;
+            Logger.Info("Waiting for element.");
+
             try
             {
-                ReturnElement = this.wait.Until(ExpectedConditions);
-
+                returnElement = Wait.Until(ExpectedConditions);
             }
             catch (WebDriverTimeoutException)
             {
-                Logger.log("ERROR", $"Can't wait for element.");
+                Logger.Error("Can't Wait for element.");
             }
 
-            if (ReturnElement != null)
+            if (returnElement != null)
             {
-                Logger.log("INFO", $"Element found.");
+                Logger.Info("Element found.");
             }
-
-            return ReturnElement;
+            return returnElement;
         }
 
         protected bool ElementExists(By Selector)
         {
-            IWebElement ReturnElement = null;
+            IWebElement returnElement = null;
             try
             {
-                ReturnElement = this.wait.Until(EC.ElementExists(Selector));
+                returnElement = Wait.Until(EC.ElementExists(Selector));
             }
             catch (WebDriverTimeoutException)
             {
-                Logger.log("ERROR", $"Can't wait for element.");
+                Logger.Error("Can't Wait for element.");
             }
-
-            return ReturnElement != null;
+            return returnElement != null;
         }
 
-        public void PopulateInput(By Selector, String TextToType)
+        public void PopulateInput(By Selector, string TextToType)
         {
-            Logger.log("INFO", $"Populate input element: <{Selector}> = '{TextToType}'");
-
-            // this.MyFindElement(Selector).SendKeys(TextToType);
-            IWebElement inputElement = this.MyFindElement(Selector);
-            inputElement.SendKeys(TextToType);
+            Logger.Info($"Populate input element: <{Selector}> = '{TextToType}'");
+            FindMyElement(Selector).SendKeys(TextToType);
         }
 
         protected void ExplicitWait(int waitTime)
         {
-            Logger.log("INFO", $"Sleeping: {waitTime}ms");
+            Logger.Info($"Sleeping: {waitTime}ms");
             System.Threading.Thread.Sleep(waitTime);
         }
+
     }
 }

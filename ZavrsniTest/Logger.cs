@@ -1,47 +1,54 @@
 ﻿using System;
 using System.IO;
 
-namespace Cas27.Lib
+namespace TestLogger
 {
     class Logger
     {
-        private static string logFilename = @"C:\SeleniumLogger\test.logger";
+        private static string LogFilename = @"C:\SeleniumLogger\test.logger";
+        private static string InfoMessageType = "INFO";
+        private static string ErrorMessageType = "ERROR";
 
-        public static void setFileName(string fileName)
+        public static void SetFileName(string fileName)
         {
-            logFilename = fileName;
+            LogFilename = fileName;
         }
 
-        public static void empty()
+        public static void Empty()
         {
-            File.WriteAllText(logFilename, string.Empty);
+            File.WriteAllText(LogFilename, string.Empty);
         }
 
-        public static void log(string messageType, string logMessage)
+        public static void Info(string logMessage)
         {
-            writeLog($"[{DateTime.Now}] {messageType}: {logMessage}");
+            WriteLog($"[{DateTime.Now}] {InfoMessageType}: {logMessage}");
         }
 
-        public static void beginTest(string testName)
+        public static void Error(string logMessage)
         {
-            writeLog(separator());
-            writeLog($"Staring test: {testName}");
+            WriteLog($"[{DateTime.Now}] {ErrorMessageType}: {logMessage}");
         }
 
-        public static void endTest()
+        public static void BeginTest(string testName)
         {
-            writeLog(separator());
+            WriteLog(Separator());
+            WriteLog($"Staring test: {testName}");
         }
 
-        private static void writeLog(string logMessage)
+        public static void EndTest()
         {
-            using (StreamWriter fileHandle = new StreamWriter(logFilename, true))
+            WriteLog(Separator());
+        }
+
+        private static void WriteLog(string logMessage)
+        {
+            using (StreamWriter fileHandle = new StreamWriter(LogFilename, true))
             {
                 fileHandle.WriteLine(logMessage);
             }
         }
 
-        private static string separator(char character = '=')
+        private static string Separator(char character = '=')
         {
             return new string(character, 100);
         }
