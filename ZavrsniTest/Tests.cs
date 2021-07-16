@@ -12,8 +12,6 @@ using System.Collections.Generic;
 
 namespace AutomatedTests
 {
-    [TestFixture]
-    [Parallelizable]
     class Tests : BaseTest
     {
         private const string EtsyUrl = "https://www.etsy.com/";
